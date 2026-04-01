@@ -43,11 +43,19 @@ https://github.com/astral-sh/uv
 uv tool install git+https://github.com/oraios/serena
 ```
 
-## 3. Rodar CLI
+## 3. Iniciar MCP Server (obrigatório)
+
+```bash
+serena start-mcp-server
+```
+
+Se você não quiser instalar, o script tenta usar `uvx` automaticamente para rodar o MCP.
+
+## 4. Rodar CLI
 
 ```bash
 python serena_fzf.py
-```
+`
 
 ## Alternativa (sem instalar)
 
