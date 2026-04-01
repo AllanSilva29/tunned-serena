@@ -37,13 +37,15 @@ O script usa o caminho padrão `.` mas você pode configurar:
 
 - variável de ambiente: `SERENA_FZF_SEARCH_PATH`
 - arquivo JSON: `serena_fzf_config.json` com chave `search_path`
-- arquivo `.env` (lido no startup): `SERENA_FZF_SEARCH_PATH`, `SERENA_FZF_EDITOR`, `SERENA_FZF_SERENA_CMD`
+- arquivo `.env` (lido no startup): `SERENA_FZF_SEARCH_PATH`, `SERENA_FZF_EDITOR`, `SERENA_FZF_SERENA_CMD`, `SERENA_FZF_EXCLUDE`, `SERENA_FZF_MAXDEPTH`
 
 Exemplo `serena_fzf_config.json`:
 
 ```json
 {
-  "search_path": "./src"
+  "search_path": "./src",
+  "maxdepth": 3,
+  "exclude": ["node_modules", ".git", "dist"]
 }
 ```
 
@@ -54,13 +56,41 @@ SERENA_FZF_SEARCH_PATH=./src
 SERENA_FZF_EDITOR=code
 SERENA_FZF_SERENA_CMD=serena
 SERENA_FZF_EXCLUDE=node_modules, .git, dist
+SERENA_FZF_MAXDEPTH=3
 ```
 
-# Setup
+### Usando flags no comando
 
-## 1. Instalar uv
+Você pode sobrescrever o `maxdepth` globalmente via comando individual:
 
-https://github.com/astral-sh/uv
+```bash
+>> :f --maxdepth=2 arquivo.txt    # busca só 2 níveis fundo
+>> :g --maxdepth=1 padrão         # grep limitado a 1 nível
+>> :s --maxdepth=3 MinhaClasse    # símbolo até 3 níveis
+```
+
+**Hierarquia de configuração:**
+1. `--maxdepth=N` no comando → prevalece (mais flexível)
+2. `SERENA_FZF_MAXDEPTH` no `.env` → caso não tenha flag
+3. `"maxdepth"` no config JSON → caso não tenha env
+4. Sem limite → glob é mais rápido para pastas pequenas
+
+## Dependências
+
+- **ripgrep** (`rg`) - Para buscas extremamente rápidas (instale com `sudo apt install ripgrep` ou `brew install ripgrep`)
+- **fzf** - Para seleção fuzzy (geralmente já vem com algumas distribuições)
+- **Python 3.8+**
+
+Se `ripgrep` não estiver disponível, o script usa fallbacks em Python (mais lentos).
+
+## Performance
+
+O script usa **ripgrep** (`rg`) quando disponível para buscas extremamente rápidas:
+
+- **Com ripgrep**: ~0.01s para milhares de arquivos
+- **Sem ripgrep**: Pode levar segundos/minutos dependendo do tamanho do projeto
+
+Para projetos grandes, instale ripgrep e configure `SERENA_FZF_MAXDEPTH=3` no `.env` para limitar profundidade.
 
 ## 2. Instalar Serena CLI
 
