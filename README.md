@@ -31,6 +31,30 @@ O projeto é modularizado para facilitar manutenção:
   - `open_in_editor()`: Abre o arquivo no editor, posicionando o cursor se houver linha.
 - **`commands.py`**: Parsing de comandos e escolha automática de ferramentas MCP.
 
+## Configuração de caminho de busca
+
+O script usa o caminho padrão `.` mas você pode configurar:
+
+- variável de ambiente: `SERENA_FZF_SEARCH_PATH`
+- arquivo JSON: `serena_fzf_config.json` com chave `search_path`
+- arquivo `.env` (lido no startup): `SERENA_FZF_SEARCH_PATH`, `SERENA_FZF_EDITOR`, `SERENA_FZF_SERENA_CMD`
+
+Exemplo `serena_fzf_config.json`:
+
+```json
+{
+  "search_path": "./src"
+}
+```
+
+Exemplo `.env`:
+
+```dotenv
+SERENA_FZF_SEARCH_PATH=./src
+SERENA_FZF_EDITOR=code
+SERENA_FZF_SERENA_CMD=serena
+```
+
 # Setup
 
 ## 1. Instalar uv
@@ -55,7 +79,7 @@ Se você não quiser instalar, o script tenta usar `uvx` automaticamente para ro
 
 ```bash
 python serena_fzf.py
-`
+```
 
 ## Alternativa (sem instalar)
 

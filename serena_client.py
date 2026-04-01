@@ -2,19 +2,18 @@ import subprocess
 import json
 import threading
 import uuid
-import os
 import shutil
 import sys
-import glob
-
-EDITOR = "code"
+import os
 
 # -------------------------
 # Serena command resolver
 # -------------------------
 def get_serena_command():
-    if shutil.which("serena"):
-        return ["serena", "start-mcp-server"]
+    serena_cmd = os.environ.get("SERENA_FZF_SERENA_CMD", "serena")
+
+    if shutil.which(serena_cmd):
+        return [serena_cmd, "start-mcp-server"]
 
     print("⚠ Serena não encontrada, tentando via uvx...\n")
 

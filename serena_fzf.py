@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from serena_client import get_serena_command, MCPClient
-from utils import extract_results, fallback_find_file, fallback_search_content, run_fzf, open_in_editor
+from utils import extract_results, fallback_find_file, fallback_search_content, run_fzf, open_in_editor, get_search_root
 from commands import parse_command, choose_tool
 
 
@@ -10,6 +10,7 @@ from commands import parse_command, choose_tool
 def main():
     print("🚀 Serena + fzf CLI\n")
 
+    search_root = get_search_root()
     client = MCPClient(get_serena_command())
 
     # MCP init
