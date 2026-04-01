@@ -41,7 +41,7 @@ def fallback_find_file(query, base_path=None, maxdepth=None):
         args = _build_ripgrep_args(base_path, excludes, maxdepth)
         
         try:
-            result = subprocess.run(args, capture_output=True, text=True, check=True)
+            result = subprocess.run(args, capture_output=True, text=True, errors='replace', check=True)
             files = result.stdout.strip().split('\n') if result.stdout else []
             
             # Filtrar por query (ripgrep lista todos os arquivos, precisamos filtrar)
@@ -100,7 +100,7 @@ def fallback_search_content(pattern, base_path=None, maxdepth=None):
         args.append(base_path)
         
         try:
-            result = subprocess.run(args, capture_output=True, text=True, check=True)
+            result = subprocess.run(args, capture_output=True, text=True, errors='replace', check=True)
             lines = result.stdout.strip().split('\n') if result.stdout else []
             return [line for line in lines if line.strip()]
         except subprocess.CalledProcessError:
