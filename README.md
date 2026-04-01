@@ -53,6 +53,7 @@ Exemplo `.env`:
 SERENA_FZF_SEARCH_PATH=./src
 SERENA_FZF_EDITOR=code
 SERENA_FZF_SERENA_CMD=serena
+SERENA_FZF_EXCLUDE=node_modules, .git, dist
 ```
 
 # Setup

@@ -41,6 +41,26 @@ def get_search_root():
     return path or "."
 
 
+def get_excludes():
+    env_value = os.environ.get("SERENA_FZF_EXCLUDE", "")
+    cfg_excludes = []
+
+    if os.path.exists("serena_fzf_config.json"):
+        try:
+            with open("serena_fzf_config.json", "r", encoding="utf-8") as f:
+                cfg = json.load(f)
+                cfg_excludes = cfg.get("exclude", []) or []
+        except Exception:
+            cfg_excludes = []
+
+    if isinstance(cfg_excludes, str):
+        cfg_excludes = [p.strip() for p in cfg_excludes.split(",") if p.strip()]
+
+    env_list = [p.strip() for p in env_value.split(",") if p.strip()]
+    return list(dict.fromkeys(cfg_excludes + env_list))
+
+
+
 def extract_results(result):
     items = []
 
@@ -58,17 +78,37 @@ def extract_results(result):
 
     return list(set(items))
 
+def should_exclude(path, excludes):
+    normalized = path.replace("\\", "/")
+    for ex in excludes:
+        if not ex:
+            continue
+        if ex.endswith("/"):
+            if normalized.startswith(ex.rstrip("/")):
+                return True
+        if ex in normalized:
+            return True
+    return False
+
 def fallback_find_file(query, base_path=None):
     base_path = base_path or get_search_root()
+    excludes = get_excludes()
     pattern = os.path.join(base_path, f"**/*{query}*")
-    return glob.glob(pattern, recursive=True)
+    candidates = glob.glob(pattern, recursive=True)
+    return [p for p in candidates if not should_exclude(p, excludes)]
 
 def fallback_search_content(pattern, base_path=None):
     base_path = base_path or get_search_root()
+    excludes = get_excludes()
     results = []
     for root, dirs, files in os.walk(base_path):
+        directories = [d for d in dirs if not should_exclude(os.path.join(root, d), excludes)]
+        dirs[:] = directories
+
         for file in files:
             path = os.path.join(root, file)
+            if should_exclude(path, excludes):
+                continue
             try:
                 with open(path, 'r', encoding='utf-8', errors='ignore') as f:
                     lines = f.readlines()
