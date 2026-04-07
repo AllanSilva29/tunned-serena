@@ -1,10 +1,11 @@
 import subprocess
 import json
+import os
 import threading
+import time
 import uuid
 import shutil
 import sys
-import os
 
 # -------------------------
 # Serena command resolver
@@ -66,7 +67,7 @@ class MCPClient:
         self.proc.stdin.write(json.dumps(payload) + "\n")
         self.proc.stdin.flush()
 
-    def call(self, method, params=None):
+    def call(self, method, params=None, timeout=None):
         req_id = str(uuid.uuid4())
         payload = {
             "jsonrpc": "2.0",
@@ -78,7 +79,14 @@ class MCPClient:
         self.proc.stdin.write(json.dumps(payload) + "\n")
         self.proc.stdin.flush()
 
+        if timeout is None:
+            timeout = int(os.environ.get("SERENA_FZF_RPC_TIMEOUT", "5"))
+
+        deadline = time.monotonic() + timeout if timeout else None
+
         while req_id not in self.responses:
-            pass
+            if deadline and time.monotonic() > deadline:
+                raise TimeoutError(f"RPC call '{method}' timed out after {timeout}s")
+            time.sleep(0.01)
 
         return self.responses.pop(req_id)

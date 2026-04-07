@@ -7,6 +7,9 @@ def open_in_editor(selection, editor=None):
     if not selection:
         return
 
+    if " | " in selection:
+        selection = selection.split(" | ", 1)[0]
+
     editor = editor or get_editor()
     parts = selection.split(":", 2)
     if len(parts) >= 2 and parts[1].isdigit():

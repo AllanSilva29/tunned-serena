@@ -18,6 +18,8 @@ def parse_flags(args_str):
                         pass
                 elif key == "exclude":
                     flags["exclude"] = value.split(",")
+                else:
+                    flags[key] = value
             else:
                 # Flag sem valor (para futuros use-cases)
                 flags[part[2:]] = True
@@ -50,6 +52,24 @@ def parse_command(query):
         flags, args = parse_flags(query[3:])
         return "find_file", {
             "pattern": args,
+            "_maxdepth": flags.get("maxdepth")
+        }
+
+    if query.startswith(":fm "):
+        flags, args = parse_flags(query[4:])
+        return "find_modified_file", {
+            "pattern": args,
+            "before": flags.get("before"),
+            "after": flags.get("after"),
+            "_maxdepth": flags.get("maxdepth")
+        }
+
+    if query.startswith(":fs "):
+        flags, args = parse_flags(query[4:])
+        return "find_size_file", {
+            "pattern": args,
+            "min_size": flags.get("min"),
+            "max_size": flags.get("max"),
             "_maxdepth": flags.get("maxdepth")
         }
 

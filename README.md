@@ -31,6 +31,34 @@ O projeto é modularizado para facilitar manutenção:
   - `open_in_editor()`: Abre o arquivo no editor, posicionando o cursor se houver linha.
 - **`commands.py`**: Parsing de comandos e escolha automática de ferramentas MCP.
 
+## Busca por data de modificação
+
+O comando `:fm` permite buscar arquivos por data de modificação, com filtros `--after` e `--before`.
+
+Exemplos:
+
+```bash
+:fm --after=2026-04-01
+:fm --before=2026-04-07
+:fm --after=2026-04-01 --before=2026-04-07
+:fm --after=7d            # arquivos modificados nos últimos 7 dias
+:fm relatório --before=2026-04-07  # arquivo com 'relatório' no nome
+```
+
+## Busca por tamanho de arquivo
+
+O comando `:fs` permite buscar arquivos por tamanho, com filtros `--min` e `--max`.
+
+Exemplos:
+
+```bash
+:fs --min=1K --max=10K    # arquivos entre 1KB e 10KB
+:fs --min=1M              # arquivos maiores que 1MB
+:fs relatório --max=500K  # arquivos com 'relatório' no nome e até 500KB
+```
+
+As unidades suportadas são `B`, `K`, `KB`, `M`, `MB`, `G`, `GB`.
+
 ## Configuração de caminho de busca
 
 O script usa o caminho padrão `.` mas você pode configurar:
@@ -39,6 +67,9 @@ O script usa o caminho padrão `.` mas você pode configurar:
 - arquivo JSON: `serena_fzf_config.json` com chave `search_path`
 - arquivo `.env` (lido no startup): `SERENA_FZF_SEARCH_PATH`, `SERENA_FZF_EDITOR`, `SERENA_FZF_SERENA_CMD`, `SERENA_FZF_EXCLUDE`, `SERENA_FZF_MAXDEPTH`
 
+O script não aplica exclusões fixas por padrão; use `SERENA_FZF_EXCLUDE` ou `serena_fzf_config.json` para definir os diretórios/arquivos que devem ser ignorados.
+
+O fallback de busca de conteúdo usa `ripgrep` (`rg`) quando disponível; caso contrário, usa `grep` se instalado. Para buscas de frases, o fallback agora usa busca literal (`-F`), o que é muito mais rápido do que varrer o projeto em Python.
 Exemplo `serena_fzf_config.json`:
 
 ```json
