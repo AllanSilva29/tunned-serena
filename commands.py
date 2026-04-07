@@ -61,6 +61,7 @@ def parse_command(query):
             "pattern": args,
             "before": flags.get("before"),
             "after": flags.get("after"),
+            "order": flags.get("order"),
             "_maxdepth": flags.get("maxdepth")
         }
 
@@ -70,6 +71,7 @@ def parse_command(query):
             "pattern": args,
             "min_size": flags.get("min"),
             "max_size": flags.get("max"),
+            "order": flags.get("order"),
             "_maxdepth": flags.get("maxdepth")
         }
 

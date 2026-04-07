@@ -33,7 +33,7 @@ O projeto é modularizado para facilitar manutenção:
 
 ## Busca por data de modificação
 
-O comando `:fm` permite buscar arquivos por data de modificação, com filtros `--after` e `--before`.
+O comando `:fm` permite buscar arquivos por data de modificação, com filtros `--after`, `--before` e `--order`.
 
 Exemplos:
 
@@ -41,20 +41,20 @@ Exemplos:
 :fm --after=2026-04-01
 :fm --before=2026-04-07
 :fm --after=2026-04-01 --before=2026-04-07
-:fm --after=7d            # arquivos modificados nos últimos 7 dias
-:fm relatório --before=2026-04-07  # arquivo com 'relatório' no nome
+:fm --after=7d --order=desc            # arquivos modificados nos últimos 7 dias, dos mais recentes aos mais antigos
+:fm relatório --before=2026-04-07 --order=asc  # arquivo com 'relatório' no nome, dos mais antigos aos mais recentes
 ```
 
 ## Busca por tamanho de arquivo
 
-O comando `:fs` permite buscar arquivos por tamanho, com filtros `--min` e `--max`.
+O comando `:fs` permite buscar arquivos por tamanho, com filtros `--min`, `--max` e `--order`.
 
 Exemplos:
 
 ```bash
-:fs --min=1K --max=10K    # arquivos entre 1KB e 10KB
-:fs --min=1M              # arquivos maiores que 1MB
-:fs relatório --max=500K  # arquivos com 'relatório' no nome e até 500KB
+:fs --min=1K --max=10K --order=asc    # arquivos entre 1KB e 10KB, do menor para o maior
+:fs --min=1M --order=desc              # arquivos maiores que 1MB, do maior para o menor
+:fs relatório --max=500K --order=asc  # arquivos com 'relatório' no nome e até 500KB, do menor para o maior
 ```
 
 As unidades suportadas são `B`, `K`, `KB`, `M`, `MB`, `G`, `GB`.

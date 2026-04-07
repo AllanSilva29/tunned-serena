@@ -116,7 +116,7 @@ def _parse_size_expression(value):
         return None
 
 
-def fallback_find_modified_files(pattern="", before=None, after=None, base_path=None, maxdepth=None):
+def fallback_find_modified_files(pattern="", before=None, after=None, order=None, base_path=None, maxdepth=None):
     base_path = base_path or get_search_root()
     excludes = get_excludes()
     maxdepth = maxdepth or get_max_depth()
@@ -152,12 +152,17 @@ def fallback_find_modified_files(pattern="", before=None, after=None, base_path=
                 continue
 
             date_str = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
-            results.append(f"{path} | {date_str}")
+            results.append((mtime, f"{path} | {date_str}"))
 
-    return results
+    if order == "asc":
+        results.sort(key=lambda item: item[0])
+    elif order == "desc":
+        results.sort(key=lambda item: item[0], reverse=True)
+
+    return [item[1] for item in results]
 
 
-def fallback_find_size_files(pattern="", min_size=None, max_size=None, base_path=None, maxdepth=None):
+def fallback_find_size_files(pattern="", min_size=None, max_size=None, order=None, base_path=None, maxdepth=None):
     base_path = base_path or get_search_root()
     excludes = get_excludes()
     maxdepth = maxdepth or get_max_depth()
@@ -193,9 +198,14 @@ def fallback_find_size_files(pattern="", min_size=None, max_size=None, base_path
                 continue
 
             size_str = _format_size(size)
-            results.append(f"{path} | {size_str}")
+            results.append((size, f"{path} | {size_str}"))
 
-    return results
+    if order == "asc":
+        results.sort(key=lambda item: item[0])
+    elif order == "desc":
+        results.sort(key=lambda item: item[0], reverse=True)
+
+    return [item[1] for item in results]
 
 
 def _format_size(size):

@@ -74,6 +74,7 @@ def main():
                 args.get("pattern", ""),
                 before=args.get("before"),
                 after=args.get("after"),
+                order=args.get("order"),
                 maxdepth=maxdepth
             )
         elif tool == "find_size_file":
@@ -81,6 +82,7 @@ def main():
                 args.get("pattern", ""),
                 min_size=args.get("min_size"),
                 max_size=args.get("max_size"),
+                order=args.get("order"),
                 maxdepth=maxdepth
             )
         else:
