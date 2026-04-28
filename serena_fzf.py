@@ -103,20 +103,8 @@ def main():
 
         # fallback para busca de símbolo
         if not options and tool == "find_symbol":
-            print("⚠ fallback: search_for_pattern\n")
-
-            try:
-                result = client.call("tools/call", {
-                    "name": "search_for_pattern",
-                    "arguments": {
-                        "pattern": args.get("name_path", ""),
-                        "relative_path": "."
-                    }
-                }, timeout=rpc_timeout)
-                options = extract_results(result)
-            except TimeoutError:
-                print("⚠ Serena demorou demais no fallback de símbolo, tentando local...\n")
-                options = fallback_search_content(args.get("name_path", ""), maxdepth=maxdepth)
+            print("⚠ fallback: busca local...\n")
+            options = fallback_search_content(args.get("name_path", ""), maxdepth=maxdepth)
 
         # fallback filesystem
         if not options and tool == "search_for_pattern":
